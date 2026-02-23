@@ -1,0 +1,62 @@
+services:
+  # PostgreSQL Database (Production)
+  postgres:
+    image: postgres:16-alpine
+    container_name: piyabordee-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: piyabordee
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-changeme}
+      POSTGRES_DB: piyabordee_shop
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U piyabordee"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - piyabordee-network
+
+  # Next.js Application
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: piyabordee-app
+    restart: unless-stopped
+    # ไม่ expose port ออก host โดยตรง — ให้ nginx ของ e-learning-web จัดการ
+    # ports:
+    #   - "${PORT:-3001}:3000"
+    environment:
+      NODE_ENV: production
+      PORT: 3000
+      DATABASE_URL: ${DATABASE_URL:-postgresql://piyabordee:changeme@piyabordee-postgres:5432/piyabordee_shop?schema=public}
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD}
+      ADMIN_TOKEN_SECRET: ${ADMIN_TOKEN_SECRET}
+    depends_on:
+      postgres:
+        condition: service_healthy
+    volumes:
+      - app_data:/app/data
+    healthcheck:
+      test: ["CMD", "wget", "--spider", "-q", "http://localhost:3000/piyabordee-shop"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    networks:
+      - piyabordee-network   # คุยกับ postgres
+      - e-learning-network   # ให้ nginx ของ e-learning-web เห็น container นี้
+
+volumes:
+  postgres_data:
+    driver: local
+  app_data:
+    driver: local
+
+networks:
+  piyabordee-network:
+    driver: bridge
+  e-learning-network:
+    external: true   # ใช้ network เดียวกับ e-learning-web
