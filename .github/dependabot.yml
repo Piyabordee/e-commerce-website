@@ -1,0 +1,19 @@
+version: 2
+updates:
+  - package-ecosystem: "npm"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    ignore:
+      # ESLint ecosystem — dev-only tools, not in production runtime
+      # Upgrading eslint-config-next/eslint to v9+ requires ESLint flat config
+      # migration which is out of scope for this project
+      - dependency-name: "eslint"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "eslint-config-next"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "@typescript-eslint/*"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "glob"
+      - dependency-name: "rimraf"
+      - dependency-name: "minimatch"
