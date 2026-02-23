@@ -6,7 +6,7 @@ services:
     restart: unless-stopped
     environment:
       POSTGRES_USER: piyabordee
-      POSTGRES_PASSWORD: ${DB_PASSWORD:-changeme}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:?DB_PASSWORD is required — copy .env.production.example to .env.production and set values}
       POSTGRES_DB: piyabordee_shop
     volumes:
       - postgres_data:/var/lib/postgresql/data
@@ -31,7 +31,7 @@ services:
     environment:
       NODE_ENV: production
       PORT: 3000
-      DATABASE_URL: ${DATABASE_URL:-postgresql://piyabordee:changeme@piyabordee-postgres:5432/piyabordee_shop?schema=public}
+      DATABASE_URL: ${DATABASE_URL:?DATABASE_URL is required — copy .env.production.example to .env.production and set values}
       ADMIN_PASSWORD: ${ADMIN_PASSWORD}
       ADMIN_TOKEN_SECRET: ${ADMIN_TOKEN_SECRET}
     depends_on:
