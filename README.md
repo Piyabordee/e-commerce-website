@@ -2,12 +2,14 @@
 
 > Full-stack e-commerce web application built with **Next.js 14**, **TypeScript**, **Tailwind CSS**, and **Prisma ORM** — featuring a customer storefront, shopping cart, live view counter, and a complete admin dashboard.
 
-![Next.js](https://img.shields.io/badge/Next.js-14-black?logo=next.js)
+![Next.js](https://img.shields.io/badge/Next.js-14.2.35-black?logo=next.js)
+![React](https://img.shields.io/badge/React-18-61DAFB?logo=react)
 ![TypeScript](https://img.shields.io/badge/TypeScript-5-blue?logo=typescript)
 ![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-3-06B6D4?logo=tailwindcss)
-![Prisma](https://img.shields.io/badge/Prisma-ORM-2D3748?logo=prisma)
+![Prisma](https://img.shields.io/badge/Prisma-5-2D3748?logo=prisma)
 ![Docker](https://img.shields.io/badge/Docker-ready-2496ED?logo=docker)
 ![Vibe Coded](https://img.shields.io/badge/vibe_coded-100%25-ff69b4)
+![Security](https://img.shields.io/badge/security-hardened-brightgreen?logo=shield)
 
 > 🎧 **Vibe Coded 100%** — โปรเจกต์นี้เขียนด้วย AI (GitHub Copilot) ทั้งหมด ไม่มีการเขียนโค้ดด้วยมือแม้แต่บรรทัดเดียว เป็นตัวอย่างการพัฒนาซอฟต์แวร์แบบ AI-first ตั้งแต่ต้นจนจบ
 
@@ -195,7 +197,20 @@ model ViewLog {
 
 ---
 
-## 📄 License
+## � Security
+
+โปรเจกต์นี้ผ่านการ sanitize ก่อน publish:
+
+- ไม่มี credentials หรือ secrets อยู่ใน codebase หรือ git history
+- `.env*` files ทุกตัว gitignored — มีเฉพาะ `.env.example` template
+- Admin session ใช้ HTTP-only cookie, secure flag ใน production
+- Next.js อัพเดทเป็น v14.2.35 (แก้ CVE auth bypass, cache poisoning, SSRF)
+- Image `remotePatterns` ใช้ explicit allowlist แทน wildcard
+- `ADMIN_TOKEN_SECRET` ไม่มี insecure fallback — fail-fast ถ้าไม่ set
+
+---
+
+## �📄 License
 
 This project is for portfolio / educational purposes.
 
